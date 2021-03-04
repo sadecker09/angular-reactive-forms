@@ -8,6 +8,18 @@ import {
 } from '@angular/forms';
 import { Customer } from './customer';
 
+function emailMatcher(c: AbstractControl): { [key: string]: boolean } | null {
+  const emailControl = c.get('email');
+  const confirmControl = c.get('confirmEmail');
+  if (emailControl.pristine || confirmControl.pristine) {
+    return null;
+  }
+  if (emailControl.value === confirmControl.value) {
+    return null;
+  }
+  return { match: true };
+}
+
 function ratingRange(min: number, max: number): ValidatorFn {
   return (c: AbstractControl): { [key: string]: boolean } | null => {
     if (
@@ -36,7 +48,13 @@ export class CustomerComponent implements OnInit {
     this.customerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(3)]],
       lastName: ['', [Validators.required, Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]],
+      emailGroup: this.fb.group(
+        {
+          email: ['', [Validators.required, Validators.email]],
+          confirmEmail: ['', Validators.required],
+        },
+        { validator: emailMatcher }
+      ),
       phone: '',
       notification: 'email',
       rating: [null, ratingRange(1, 5)],
