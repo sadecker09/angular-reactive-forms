@@ -5,6 +5,7 @@ import {
   Validators,
   AbstractControl,
   ValidatorFn,
+  FormArray,
 } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { Customer } from './customer';
@@ -47,6 +48,12 @@ export class CustomerComponent implements OnInit {
     email: 'Please enter a valid email address',
   };
 
+  // Create a property for the FormArray to make accessing easier; but instead of normal property, use getter to ensure none of the code accidentally modifies the FormArray
+  get addresses(): FormArray {
+    // need to cast to FormArray type, otherwise it would be AbstractControl
+    return <FormArray>this.customerForm.get('addresses');
+  }
+
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
@@ -65,6 +72,7 @@ export class CustomerComponent implements OnInit {
       notification: 'email',
       rating: [null, ratingRange(1, 5)],
       sendCatalog: true,
+      addresses: this.fb.array([this.buildAddress()]),
     });
 
     this.customerForm
@@ -80,6 +88,21 @@ export class CustomerComponent implements OnInit {
   save(): void {
     console.log(this.customerForm);
     console.log('Saved: ' + JSON.stringify(this.customerForm.value));
+  }
+
+  addAddress(): void {
+    this.addresses.push(this.buildAddress());
+  }
+
+  buildAddress(): FormGroup {
+    return this.fb.group({
+      addressType: 'home',
+      street1: '',
+      street2: '',
+      city: '',
+      state: '',
+      zip: '',
+    });
   }
 
   populateTestData(): void {
