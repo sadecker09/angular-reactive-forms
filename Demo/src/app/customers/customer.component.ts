@@ -4,11 +4,11 @@ import {
   FormBuilder,
   Validators,
   AbstractControl,
-  ValidatorFn,
   FormArray,
 } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { Customer } from './customer';
+import { NumberValidators } from '../shared/number.validator';
 
 function emailMatcher(c: AbstractControl): { [key: string]: boolean } | null {
   const emailControl = c.get('email');
@@ -20,18 +20,6 @@ function emailMatcher(c: AbstractControl): { [key: string]: boolean } | null {
     return null;
   }
   return { match: true };
-}
-
-function ratingRange(min: number, max: number): ValidatorFn {
-  return (c: AbstractControl): { [key: string]: boolean } | null => {
-    if (
-      c.value !== null &&
-      (isNaN(c.value) || c.value < min || c.value > max)
-    ) {
-      return { range: true };
-    }
-    return null;
-  };
 }
 
 @Component({
@@ -70,7 +58,8 @@ export class CustomerComponent implements OnInit {
       ),
       phone: '',
       notification: 'email',
-      rating: [null, ratingRange(1, 5)],
+      // todo - bug? validation passes w/ entry of zero
+      rating: [null, NumberValidators.range(1, 5)],
       sendCatalog: true,
       addresses: this.fb.array([this.buildAddress()]),
     });
