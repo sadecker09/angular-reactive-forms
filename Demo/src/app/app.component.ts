@@ -32,6 +32,15 @@ import { Component } from '@angular/core';
             >Add Product</a
           >
         </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            [routerLink]="['/customer-signup']"
+            >Customer Sign-Up</a
+          >
+        </li>
       </ul>
     </nav>
     <div class="container">
