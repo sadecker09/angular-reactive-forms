@@ -16,9 +16,9 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'Demo'`, () => {
+  it(`should have as title 'Acme Product Management'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('Demo');
+    expect(app.pageTitle).toEqual('Acme Product Management');
   });
 });
