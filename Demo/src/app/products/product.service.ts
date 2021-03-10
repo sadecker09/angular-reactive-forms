@@ -24,6 +24,7 @@ export class ProductService {
 
   getProduct(id: number): Observable<Product> {
     if (id === 0) {
+      // typically in real app, server would return the initialized object
       return of(this.initializeProduct());
     }
     const url = `${this.productsUrl}/${id}`;
@@ -36,7 +37,7 @@ export class ProductService {
 
   createProduct(product: Product): Observable<Product> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    product.id = null;
+    product.id = null; // required for in-memory-web-api
     return this.http.post<Product>(this.productsUrl, product, { headers })
       .pipe(
         tap(data => console.log('createProduct: ' + JSON.stringify(data))),
